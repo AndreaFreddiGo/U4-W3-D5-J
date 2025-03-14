@@ -1,14 +1,32 @@
 package andrea_freddi.entities;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
 // creo la classe astratta Elemento padre di Libro e Rivista
 
+@Entity
+// rinomino la tabella in elementi_biblioteca
+@Table(name = "elementi_biblioteca")
+// definisco la strategia di ereditarietà SINGLE_TABLE
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+// definisco la colonna discriminatoria
+@DiscriminatorColumn(name = "tipo_elemento")
 public abstract class Elemento {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "codice_ISBN", nullable = false)
     protected long id;
+    @Column(name = "titolo", nullable = false)
     protected String titolo;
+    @Column(name = "anno_pubblicazione", nullable = false)
     protected LocalDate annoPubblicazione;
+    @Column(name = "numero_pagine")
     protected int numeroPagine;
+
+    // creo la relazione uno a molti con la tabella prestiti (bidirezionale)
+    @OneToMany(mappedBy = "elemento")
+    protected Prestito prestito;
 
     public Elemento() {
     }

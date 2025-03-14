@@ -1,11 +1,16 @@
 package andrea_freddi.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.time.LocalDate;
 
 // creo la classe Libro che estende Elemento
 
+@Entity
 public class Libro extends Elemento {
+    @Column(name = "autore")
     private String autore;
+    @Column(name = "genere")
     private String genere;
 
     public Libro() {
