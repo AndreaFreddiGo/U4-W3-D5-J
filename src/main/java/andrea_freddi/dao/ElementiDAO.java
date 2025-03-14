@@ -4,6 +4,7 @@ import andrea_freddi.entities.Elemento;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 
 public class ElementiDAO {
     private final EntityManager entityManager;
@@ -48,10 +49,17 @@ public class ElementiDAO {
 
     // creo il metodo findByISBN che cerca un elemento nel database in base all'ISBN con la NamedQuery
     public Elemento findByISBN(String isbn) {
-        return entityManager.createNamedQuery("findByISBN", Elemento.class).setParameter("isbn", isbn).getSingleResult();
+        try {
+            Elemento elementoTrovato = entityManager.createNamedQuery("findByISBN", Elemento.class).setParameter("isbn", isbn).getSingleResult();
+            System.out.println("Elemento con codice ISBN " + isbn + " trovato: " + elementoTrovato.getTitolo());
+            return elementoTrovato;
+        } catch (Exception e) {
+            System.out.println("Elemento con codice ISBN " + isbn + " non trovato.");
+            return null;
+        }
     }
 
-    // creo il metodo findByISBNAndDelete che cerca un elemento nel database in base al titolo con la NamedQuery e lo elimina
+    // creo il metodo findByISBNAndDelete che cerca un elemento nel database in base all'ISBN con la NamedQuery e lo elimina
     public void findByISBNAndDelete(String isbn) {
         try {
             EntityTransaction transaction = entityManager.getTransaction();
@@ -61,9 +69,48 @@ public class ElementiDAO {
                 entityManager.remove(elementoTrovato);
                 transaction.commit();
                 System.out.println("Elemento " + elementoTrovato.getTitolo() + " correttamente eliminato dal catalogo della biblioteca");
-            } else System.out.println("Elemento non trovato");
+            } else System.out.println("Elemento con codice ISBN " + isbn + " non trovato");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    // creo il metodo findByAnnoPubblicazione che cerca elementi nel database in base all'anno di pubblicazione con la NamedQuery
+    public List<Elemento> findByAnnoPubblicazione(int annoPubblicazione) {
+        List<Elemento> elementiTrovati = entityManager.createNamedQuery("findByAnnoPubblicazione", Elemento.class).setParameter("annoPubblicazione", annoPubblicazione).getResultList();
+        if (elementiTrovati.isEmpty()) {
+            System.out.println("Nessun elemento trovato per l'anno di pubblicazione " + annoPubblicazione);
+        } else {
+            for (Elemento elemento : elementiTrovati) {
+                System.out.println("Elemento trovato per l'anno di pubblicazione " + annoPubblicazione + ": " + elemento.getTitolo());
+            }
+        }
+        return elementiTrovati;
+    }
+
+    // creo il metodo findByAutore che cerca elementi nel database in base all'autore con la NamedQuery
+    public List<Elemento> findByAutore(String autore) {
+        List<Elemento> elementiTrovati = entityManager.createNamedQuery("findByAutore", Elemento.class).setParameter("autore", autore).getResultList();
+        if (elementiTrovati.isEmpty()) {
+            System.out.println("Nessun elemento trovato per l'autore " + autore);
+        } else {
+            for (Elemento elemento : elementiTrovati) {
+                System.out.println("Elemento trovato per l'autore " + autore + ": " + elemento.getTitolo());
+            }
+        }
+        return elementiTrovati;
+    }
+
+    // creo il metodo findByTitolo che cerca elementi nel database in base al titolo (o parte di esso) con la NamedQuery
+    public List<Elemento> findByTitolo(String titolo) {
+        List<Elemento> elementiTrovati = entityManager.createNamedQuery("findByTitolo", Elemento.class).setParameter("titolo", "%" + titolo + "%").getResultList();
+        if (elementiTrovati.isEmpty()) {
+            System.out.println("Nessun elemento trovato con il titolo " + titolo);
+        } else {
+            for (Elemento elemento : elementiTrovati) {
+                System.out.println("Elemento trovato con il titolo " + titolo + ": " + elemento.getTitolo());
+            }
+        }
+        return elementiTrovati;
     }
 }

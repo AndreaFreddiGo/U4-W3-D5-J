@@ -27,7 +27,7 @@ public class Prestito {
 
     // creo la relazione molti a uno con la tabella elementi_biblioteca (bidirezionale)
     @ManyToOne
-    @JoinColumn(name = "codice_ISBN")
+    @JoinColumn(name = "elemento_id")
     private Elemento elemento;
 
     public Prestito() {

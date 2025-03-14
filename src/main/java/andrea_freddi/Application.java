@@ -3,18 +3,16 @@ package andrea_freddi;
 import andrea_freddi.dao.ElementiDAO;
 import andrea_freddi.dao.PrestitiDAO;
 import andrea_freddi.dao.UtentiDAO;
-import andrea_freddi.entities.Libro;
-import andrea_freddi.entities.Periodicità;
-import andrea_freddi.entities.Rivista;
-import andrea_freddi.entities.Utente;
+import andrea_freddi.entities.*;
 import com.github.javafaker.Faker;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Application {
@@ -30,16 +28,16 @@ public class Application {
 
         // creo elementi del catalogo e li salvo nel database
         for (int i = 0; i < 10; i++) {
-            Libro libro = new Libro(faker.number().numberBetween(1950, 2025), faker.code().isbn10(), faker.number().numberBetween(100, 400), faker.book().title(), faker.book().author(), faker.book().genre());
+            Libro libro = new Libro(random.nextInt(1950, 2025), faker.code().isbn10(), random.nextInt(100, 400), faker.book().title(), faker.book().author(), faker.book().genre());
 //            elementiDAO.save(libro);
         }
 
-        Rivista rivista1 = new Rivista(faker.number().numberBetween(2015, 2025), faker.code().isbn10(), faker.number().numberBetween(20, 50), faker.book().genre() + " Magazine", Periodicità.MENSILE);
-        Rivista rivista2 = new Rivista(faker.number().numberBetween(2015, 2025), faker.code().isbn10(), faker.number().numberBetween(20, 50), faker.book().genre() + " Magazine", Periodicità.SETTIMANALE);
-        Rivista rivista3 = new Rivista(faker.number().numberBetween(2015, 2025), faker.code().isbn10(), faker.number().numberBetween(20, 50), faker.book().genre() + " Magazine", Periodicità.SEMESTRALE);
-        Rivista rivista4 = new Rivista(faker.number().numberBetween(2015, 2025), faker.code().isbn10(), faker.number().numberBetween(20, 50), faker.book().genre() + " Magazine", Periodicità.MENSILE);
-        Rivista rivista5 = new Rivista(faker.number().numberBetween(2015, 2025), faker.code().isbn10(), faker.number().numberBetween(20, 50), faker.book().genre() + " Magazine", Periodicità.SETTIMANALE);
-        Rivista rivista6 = new Rivista(faker.number().numberBetween(2015, 2025), faker.code().isbn10(), faker.number().numberBetween(20, 50), faker.book().genre() + " Magazine", Periodicità.SEMESTRALE);
+        Rivista rivista1 = new Rivista(random.nextInt(2015, 2025), faker.code().isbn10(), random.nextInt(20, 50), faker.book().genre() + " Magazine", Periodicità.MENSILE);
+        Rivista rivista2 = new Rivista(random.nextInt(2015, 2025), faker.code().isbn10(), random.nextInt(20, 50), faker.book().genre() + " Magazine", Periodicità.SETTIMANALE);
+        Rivista rivista3 = new Rivista(random.nextInt(2015, 2025), faker.code().isbn10(), random.nextInt(20, 50), faker.book().genre() + " Magazine", Periodicità.SEMESTRALE);
+        Rivista rivista4 = new Rivista(random.nextInt(2015, 2025), faker.code().isbn10(), random.nextInt(20, 50), faker.book().genre() + " Magazine", Periodicità.MENSILE);
+        Rivista rivista5 = new Rivista(random.nextInt(2015, 2025), faker.code().isbn10(), random.nextInt(20, 50), faker.book().genre() + " Magazine", Periodicità.SETTIMANALE);
+        Rivista rivista6 = new Rivista(random.nextInt(2015, 2025), faker.code().isbn10(), random.nextInt(20, 50), faker.book().genre() + " Magazine", Periodicità.SEMESTRALE);
 
 //        elementiDAO.save(rivista1);
 //        elementiDAO.save(rivista2);
@@ -51,18 +49,41 @@ public class Application {
         // creo utenti e li salvo nel database
         for (int i = 0; i < 10; i++) {
             Utente utente = new Utente(faker.name().lastName(), faker.date().birthday(), faker.name().firstName());
-            utentiDAO.save(utente);
+//            utentiDAO.save(utente);
         }
 
+
+        // prima genero 10 numeri causali unici fra 1 e 16 per definire gli elementi da prendere in prestito
+        List<Integer> numeri = new ArrayList<>();
+        for (int i = 1; i <= 16; i++) {
+            numeri.add(i);
+        }
+        Collections.shuffle(numeri);
+        List<Integer> estratti = numeri.subList(0, 10);
         // creo prestiti e li salvo nel database
-        Date startDate = Date.from(LocalDate.of(2025, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date endDate = Date.from(LocalDate.of(2025, 03, 01).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        for (int i = 0; i < 16; i++) {
-            elementiDAO.findById(i);
-            utentiDAO.findById(random.nextInt(10));
-            prestitiDAO.save(faker.date().between(startDate, endDate), );
+        for (int i = 0; i < estratti.size(); i++) {
+            Elemento elementoTrovato = elementiDAO.findById(estratti.get(i));
+            Utente utenteTrovato = utentiDAO.findById(random.nextInt(1, 11));
+            LocalDate dataInizioPrestito = LocalDate.of(2025, random.nextInt(1, 4), random.nextInt(1, 29));
+            Prestito prestito = new Prestito(dataInizioPrestito, dataInizioPrestito.plusDays(random.nextInt(10, 41)), dataInizioPrestito.plusDays(30), elementoTrovato, utenteTrovato);
+//            prestitiDAO.save(prestito);
         }
 
+        // provo a cercare un elemento nel database in base all'ISBN
+        elementiDAO.findByISBN("0968639380");
+        elementiDAO.findByISBN("0968639381");
+
+        // provo a cercare elementi nel database in base all'anno di pubblicazione
+        elementiDAO.findByAnnoPubblicazione(2025);
+        elementiDAO.findByAnnoPubblicazione(2008);
+
+        // provo a cercare un elemento nel database in base all'autore
+        elementiDAO.findByAutore("J.R.R. Tolkien");
+        elementiDAO.findByAutore("Ryan Rempel");
+
+        // provo a cercare un elemento nel database in base al titolo
+        elementiDAO.findByTitolo("The");
+        elementiDAO.findByTitolo("or");
 
         em.close();
         emf.close();
