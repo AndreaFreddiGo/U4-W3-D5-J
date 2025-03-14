@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.time.LocalDate;
 
 // creo la classe Rivista che estende Elemento
 
@@ -17,8 +16,8 @@ public class Rivista extends Elemento {
     public Rivista() {
     }
 
-    public Rivista(String titolo, LocalDate annoPubblicazione, int numeroPagine, Periodicità periodicità) {
-        super(titolo, annoPubblicazione, numeroPagine);
+    public Rivista(int annoPubblicazione, String codice_ISBN, int numeroPagine, String titolo, Periodicità periodicità) {
+        super(annoPubblicazione, codice_ISBN, numeroPagine, titolo);
         this.periodicità = periodicità;
     }
 
@@ -35,6 +34,7 @@ public class Rivista extends Elemento {
         return "Rivista{" +
                 "periodicità=" + periodicità +
                 ", annoPubblicazione=" + annoPubblicazione +
+                ", codice_ISBN='" + codice_ISBN + '\'' +
                 ", id=" + id +
                 ", numeroPagine=" + numeroPagine +
                 ", titolo='" + titolo + '\'' +

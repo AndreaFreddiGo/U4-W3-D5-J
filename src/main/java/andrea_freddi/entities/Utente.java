@@ -1,7 +1,7 @@
 package andrea_freddi.entities;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 // creo la classe Utente
@@ -19,7 +19,7 @@ public class Utente {
     @Column(name = "cognome", nullable = false)
     private String cognome;
     @Column(name = "data_di_nascita", nullable = false)
-    private LocalDate dataDiNascita;
+    private Date dataDiNascita;
 
     // creo la relazione uno a molti con la tabella prestiti (bidirezionale)
     @OneToMany(mappedBy = "utente")
@@ -28,7 +28,7 @@ public class Utente {
     public Utente() {
     }
 
-    public Utente(String cognome, LocalDate dataDiNascita, Long id, String nome) {
+    public Utente(String cognome, Date dataDiNascita, String nome) {
         this.cognome = cognome;
         this.dataDiNascita = dataDiNascita;
         this.nome = nome;
@@ -42,11 +42,11 @@ public class Utente {
         this.cognome = cognome;
     }
 
-    public LocalDate getDataDiNascita() {
+    public Date getDataDiNascita() {
         return dataDiNascita;
     }
 
-    public void setDataDiNascita(LocalDate dataDiNascita) {
+    public void setDataDiNascita(Date dataDiNascita) {
         this.dataDiNascita = dataDiNascita;
     }
 

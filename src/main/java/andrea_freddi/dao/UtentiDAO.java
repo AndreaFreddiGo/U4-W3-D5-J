@@ -19,9 +19,14 @@ public class UtentiDAO {
             transaction.begin();
             entityManager.persist(utente);
             transaction.commit();
-            System.out.println("L'utente " + utente.getNome() + " " + utente.getCognome() + "è stato aggiunto con successo al catalogo della biblioteca!");
+            System.out.println("L'utente " + utente.getNome() + " " + utente.getCognome() + "è stato aggiunto con successo al registro della biblioteca!");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    // creo il metodo findById che cerca un utente nel database in base all'id
+    public Utente findById(long id) {
+        return entityManager.find(Utente.class, id);
     }
 }

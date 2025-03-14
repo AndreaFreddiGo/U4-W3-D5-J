@@ -2,7 +2,6 @@ package andrea_freddi.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.time.LocalDate;
 
 // creo la classe Libro che estende Elemento
 
@@ -16,8 +15,8 @@ public class Libro extends Elemento {
     public Libro() {
     }
 
-    public Libro(String titolo, LocalDate annoPubblicazione, int numeroPagine, String autore, String genere) {
-        super(titolo, annoPubblicazione, numeroPagine);
+    public Libro(int annoPubblicazione, String codice_ISBN, int numeroPagine, String titolo, String autore, String genere) {
+        super(annoPubblicazione, codice_ISBN, numeroPagine, titolo);
         this.autore = autore;
         this.genere = genere;
     }
@@ -43,10 +42,11 @@ public class Libro extends Elemento {
         return "Libro{" +
                 "autore='" + autore + '\'' +
                 ", genere='" + genere + '\'' +
-                ", annoPubblicazione=" + annoPubblicazione +
-                ", id=" + id +
-                ", numeroPagine=" + numeroPagine +
                 ", titolo='" + titolo + '\'' +
+                ", numeroPagine=" + numeroPagine +
+                ", id=" + id +
+                ", codice_ISBN='" + codice_ISBN + '\'' +
+                ", annoPubblicazione=" + annoPubblicazione +
                 '}';
     }
 }

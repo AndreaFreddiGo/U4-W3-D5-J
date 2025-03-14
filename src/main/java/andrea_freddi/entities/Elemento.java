@@ -1,7 +1,7 @@
 package andrea_freddi.entities;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.List;
 
 // creo la classe astratta Elemento padre di Libro e Rivista
 
@@ -12,37 +12,50 @@ import java.time.LocalDate;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 // definisco la colonna discriminatoria
 @DiscriminatorColumn(name = "tipo_elemento")
+
+@NamedQuery(name = "findByISBN", query = "SELECT e FROM Elemento e WHERE e.codice_ISBN = :codice_ISBN")
 public abstract class Elemento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codice_ISBN", nullable = false)
+    @Column(name = "elemento_id", nullable = false)
     protected long id;
+    @Column(name = "codice_ISBN", nullable = false)
+    protected String codice_ISBN;
     @Column(name = "titolo", nullable = false)
     protected String titolo;
     @Column(name = "anno_pubblicazione", nullable = false)
-    protected LocalDate annoPubblicazione;
+    protected int annoPubblicazione;
     @Column(name = "numero_pagine")
     protected int numeroPagine;
 
     // creo la relazione uno a molti con la tabella prestiti (bidirezionale)
     @OneToMany(mappedBy = "elemento")
-    protected Prestito prestito;
+    protected List<Prestito> listaPrestiti;
 
     public Elemento() {
     }
 
-    public Elemento(String titolo, LocalDate annoPubblicazione, int numeroPagine) {
-        this.titolo = titolo;
+    public Elemento(int annoPubblicazione, String codice_ISBN, int numeroPagine, String titolo) {
         this.annoPubblicazione = annoPubblicazione;
+        this.codice_ISBN = codice_ISBN;
         this.numeroPagine = numeroPagine;
+        this.titolo = titolo;
     }
 
-    public LocalDate getAnnoPubblicazione() {
+    public int getAnnoPubblicazione() {
         return annoPubblicazione;
     }
 
-    public void setAnnoPubblicazione(LocalDate annoPubblicazione) {
+    public void setAnnoPubblicazione(int annoPubblicazione) {
         this.annoPubblicazione = annoPubblicazione;
+    }
+
+    public String getCodice_ISBN() {
+        return codice_ISBN;
+    }
+
+    public void setCodice_ISBN(String codice_ISBN) {
+        this.codice_ISBN = codice_ISBN;
     }
 
     public long getId() {
@@ -69,9 +82,10 @@ public abstract class Elemento {
     public String toString() {
         return "Elemento{" +
                 "annoPubblicazione=" + annoPubblicazione +
+                ", codice_ISBN='" + codice_ISBN + '\'' +
                 ", id=" + id +
-                ", titolo='" + titolo + '\'' +
                 ", numeroPagine=" + numeroPagine +
+                ", titolo='" + titolo + '\'' +
                 '}';
     }
 }

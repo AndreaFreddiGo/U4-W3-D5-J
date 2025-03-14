@@ -33,11 +33,11 @@ public class Prestito {
     public Prestito() {
     }
 
-    public Prestito(LocalDate dataInizioPrestito, LocalDate dataRestituzionePrevista, Elemento elemento, Long id, Utente utente) {
+    public Prestito(LocalDate dataInizioPrestito, LocalDate dataRestituzioneEffettiva, LocalDate dataRestituzionePrevista, Elemento elemento, Utente utente) {
         this.dataInizioPrestito = dataInizioPrestito;
+        this.dataRestituzioneEffettiva = dataRestituzioneEffettiva;
         this.dataRestituzionePrevista = dataRestituzionePrevista;
         this.elemento = elemento;
-        this.id = id;
         this.utente = utente;
     }
 
