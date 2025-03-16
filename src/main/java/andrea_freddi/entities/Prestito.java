@@ -8,6 +8,9 @@ import java.time.LocalDate;
 @Entity
 // rinomino la tabella in prestiti
 @Table(name = "prestiti")
+
+// creo la query che mi servirà per effettuare le ricerche di prestiti scaduti ma non ancora restituiti
+@NamedQuery(name = "findStillActivePastLoans", query = "SELECT p FROM Prestito p WHERE p.dataRestituzionePrevista < CURRENT_DATE AND p.dataRestituzioneEffettiva IS NULL")
 public class Prestito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

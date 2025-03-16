@@ -113,4 +113,17 @@ public class ElementiDAO {
         }
         return elementiTrovati;
     }
+
+    // creo il metodo findBorrowedElementsByUser che cerca elementi prestati in base al numero di tessera dell'utente con la NamedQuery
+    public List<Elemento> findBorrowedElemetsByUser(long numero_tessera) {
+        List<Elemento> elementiTrovati = entityManager.createNamedQuery("findBorrowedElementsByUser", Elemento.class).setParameter("numero_tessera", numero_tessera).getResultList();
+        if (elementiTrovati.isEmpty()) {
+            System.out.println("Nessun elemento attualmente in prestito all'utente con numero di tessera " + numero_tessera);
+        } else {
+            for (Elemento elemento : elementiTrovati) {
+                System.out.println("Elemento attualmente in prestito all'utente con numero di tessera " + numero_tessera + ": " + elemento.getTitolo());
+            }
+        }
+        return elementiTrovati;
+    }
 }

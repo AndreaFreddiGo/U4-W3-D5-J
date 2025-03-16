@@ -65,7 +65,13 @@ public class Application {
             Elemento elementoTrovato = elementiDAO.findById(estratti.get(i));
             Utente utenteTrovato = utentiDAO.findById(random.nextInt(1, 11));
             LocalDate dataInizioPrestito = LocalDate.of(2025, random.nextInt(1, 4), random.nextInt(1, 29));
-            Prestito prestito = new Prestito(dataInizioPrestito, dataInizioPrestito.plusDays(random.nextInt(10, 41)), dataInizioPrestito.plusDays(30), elementoTrovato, utenteTrovato);
+            LocalDate dataRestituzionePrevista = dataInizioPrestito.plusDays(30);
+            // siccome genero le restituzioni con un delta randomico rispetto alla data di inizio prestito, ho fatto in modo che se la data di restituzione effettiva è futura, la setto a null
+            LocalDate dataRestituzioneEffettiva = dataInizioPrestito.plusDays(random.nextInt(10, 50));
+            if (dataRestituzioneEffettiva.isAfter(LocalDate.now())) {
+                dataRestituzioneEffettiva = null;
+            }
+            Prestito prestito = new Prestito(dataInizioPrestito, dataRestituzioneEffettiva, dataRestituzionePrevista, elementoTrovato, utenteTrovato);
 //            prestitiDAO.save(prestito);
         }
 
@@ -84,6 +90,13 @@ public class Application {
         // provo a cercare un elemento nel database in base al titolo
         elementiDAO.findByTitolo("The");
         elementiDAO.findByTitolo("or");
+
+        // provo a cercare elementi prestati in base al numero di tessera dell'utente
+        elementiDAO.findBorrowedElemetsByUser(1);
+        elementiDAO.findBorrowedElemetsByUser(3);
+
+        // provo a cercare prestiti scaduti ma non ancora restituiti
+        prestitiDAO.findStillActivePastLoans();
 
         em.close();
         emf.close();

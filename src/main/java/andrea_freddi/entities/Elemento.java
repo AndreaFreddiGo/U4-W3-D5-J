@@ -13,10 +13,12 @@ import java.util.List;
 // definisco la colonna discriminatoria
 @DiscriminatorColumn(name = "tipo_elemento")
 
+// creo tutte le query che mi serviranno per effettuare le ricerche di elementi
 @NamedQuery(name = "findByISBN", query = "SELECT e FROM Elemento e WHERE e.codice_ISBN = :isbn")
 @NamedQuery(name = "findByAnnoPubblicazione", query = "SELECT e FROM Elemento e WHERE e.annoPubblicazione = :annoPubblicazione")
 @NamedQuery(name = "findByAutore", query = "SELECT e FROM Elemento e WHERE e.autore = :autore")
 @NamedQuery(name = "findByTitolo", query = "SELECT e FROM Elemento e WHERE e.titolo LIKE :titolo")
+@NamedQuery(name = "findBorrowedElementsByUser", query = "SELECT e FROM Elemento e JOIN e.listaPrestiti p WHERE p.utente.id = :numero_tessera AND p.dataRestituzioneEffettiva < CURRENT_DATE")
 public abstract class Elemento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
